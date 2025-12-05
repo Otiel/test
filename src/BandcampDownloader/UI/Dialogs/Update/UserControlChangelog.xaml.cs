@@ -1,0 +1,88 @@
+﻿using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
+using BandcampDownloader.Core.DependencyInjection;
+using BandcampDownloader.Helpers;
+using BandcampDownloader.Net;
+using BandcampDownloader.Threading;
+using NLog;
+using WpfMessageBoxLibrary;
+
+namespace BandcampDownloader.UI.Dialogs.Update;
+
+internal sealed partial class UserControlChangelog
+{
+    private readonly IHttpService _httpService;
+    private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+
+    private const string CHANGELOG_URL = "https://raw.githubusercontent.com/Otiel/BandcampDownloader/master/CHANGELOG.md";
+
+    public UserControlChangelog()
+    {
+        _httpService = DependencyInjectionHelper.GetService<IHttpService>();
+
+        InitializeComponent();
+        Loaded += OnLoaded;
+    }
+
+    private async Task<string> DownloadChangelogAsync()
+    {
+        var httpClient = _httpService.CreateHttpClient();
+        var changelog = await httpClient.GetStringAsync(CHANGELOG_URL).ConfigureAwait(false);
+        return changelog;
+    }
+
+    private async void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        string changelog;
+        try
+        {
+            changelog = await DownloadChangelogAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex);
+            changelog = string.Format(Properties.Resources.changelogDownloadError, CHANGELOG_URL);
+        }
+
+        await ThreadUtils.ExecuteOnUiAsync(() => MarkdownViewer.Markdown = changelog).ConfigureAwait(false);
+    }
+
+    private async void OpenHyperlink(object sender, ExecutedRoutedEventArgs e)
+    {
+        var url = e.Parameter.ToString();
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            _logger.Log(LogLevel.Error, $"url is invalid: {url}");
+            return;
+        }
+
+        try
+        {
+            UrlHelper.OpenUrlInBrowser(url);
+        }
+        catch (Win32Exception ex) when (ex.Message == "The system cannot find the file specified")
+        {
+            // Probably a relative link like "/docs/help-translate.md"
+            _logger.Error(ex);
+
+            var msgProperties = new WpfMessageBoxProperties
+            {
+                Button = WpfMessageBoxButton.OK,
+                ButtonOkText = Properties.Resources.messageBoxButtonOK,
+                Image = WpfMessageBoxImage.Error,
+                Text = string.Format(Properties.Resources.messageBoxCouldNotOpenUrlError, url),
+                Title = "Bandcamp Downloader",
+            };
+
+            await ThreadUtils.ExecuteOnUiAsync(
+                () =>
+                {
+                    var ownerWindow = Window.GetWindow(this);
+                    WpfMessageBox.Show(ownerWindow, ref msgProperties);
+                }).ConfigureAwait(false);
+        }
+    }
+}

@@ -1,0 +1,80 @@
+﻿<UserControl
+    x:Class="BandcampDownloader.UI.Dialogs.Settings.UserControlSettingsDownloads"
+    x:ClassModifier="internal"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:settings="clr-namespace:BandcampDownloader.Settings"
+    Width="410 "
+    Height="90"
+    lex:LocalizeDictionary.DesignCulture="en"
+    lex:ResxLocalizationProvider.DefaultAssembly="BandcampDownloader"
+    lex:ResxLocalizationProvider.DefaultDictionary="Resources"
+    d:DataContext="{d:DesignInstance settings:IUserSettings}"
+    KeyboardNavigation.TabNavigation="Local"
+    mc:Ignorable="d">
+    <Grid x:Name="GridMain" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26" />
+            <RowDefinition Height="26" />
+            <RowDefinition Height="26" />
+        </Grid.RowDefinitions>
+        <Label
+            x:Name="LabelMaxConcurrentAlbumsDownloads"
+            Grid.Row="0"
+            Grid.Column="0"
+            Content="{lex:Loc}"
+            Target="{Binding ElementName=TextBoxMaxConcurrentAlbumsDownloads}" />
+        <TextBox
+            x:Name="TextBoxMaxConcurrentAlbumsDownloads"
+            Grid.Row="0"
+            Grid.Column="1"
+            Width="40"
+            Height="20"
+            HorizontalAlignment="Left"
+            VerticalContentAlignment="Center"
+            TabIndex="1"
+            Text="{Binding Path=MaxConcurrentAlbumsDownloads, UpdateSourceTrigger=Explicit}"
+            TextChanged="TextBox_TextChanged"
+            ToolTip="{lex:Loc}"
+            ToolTipService.ShowDuration="60000" />
+        <Label
+            x:Name="LabelMaxConcurrentTracksDownloads"
+            Grid.Row="1"
+            Grid.Column="0"
+            Content="{lex:Loc}"
+            Target="{Binding ElementName=TextBoxMaxConcurrentTracksDownloads}" />
+        <TextBox
+            x:Name="TextBoxMaxConcurrentTracksDownloads"
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="40"
+            Height="20"
+            HorizontalAlignment="Left"
+            VerticalContentAlignment="Center"
+            TabIndex="1"
+            Text="{Binding Path=MaxConcurrentTracksDownloads, UpdateSourceTrigger=Explicit}"
+            TextChanged="TextBox_TextChanged"
+            ToolTip="{lex:Loc}"
+            ToolTipService.ShowDuration="60000" />
+        <CheckBox
+            x:Name="CheckBoxRetrieveFilesSize"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Content="{lex:Loc}"
+            IsChecked="{Binding RetrieveFilesSize, UpdateSourceTrigger=Explicit}"
+            IsEnabled="True"
+            TabIndex="1"
+            ToolTip="{lex:Loc}"
+            ToolTipService.ShowDuration="60000" />
+    </Grid>
+</UserControl>
