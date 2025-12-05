@@ -1,0 +1,28 @@
+name: CI
+
+on:
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+
+jobs:
+    # Validate changelog
+    validate-changelog:
+        runs-on: windows-latest
+
+        env:
+            Changelog: CHANGELOG.md
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
+
+            - name: Get changelog entry
+              uses: mindsers/changelog-reader-action@v2
+              with:
+                  validation_level: error
+                  validation_depth: 1000
+                  path: $env:Changelog
