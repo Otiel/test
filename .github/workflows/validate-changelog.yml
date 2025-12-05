@@ -18,8 +18,7 @@ jobs:
                   fetch-depth: 0
 
             - name: Get changelog entry
-              uses: mindsers/changelog-reader-action@v2
+              # uses: mindsers/changelog-reader-action@v2
+              uses: coditory/changelog-parser@v1
               with:
-                  validation_level: error
-                  validation_depth: 1000
                   path: CHANGELOG.md
