@@ -19,6 +19,7 @@ jobs:
             PublishedExe: artifacts\BandcampDownloader.exe
             PublishedZip: artifacts\BandcampDownloader.zip
             Changelog: CHANGELOG.md
+            ChangelogExtract: artifacts\CHANGELOG-extract.md
 
         steps:
             - name: Checkout
@@ -39,19 +40,14 @@ jobs:
             - name: Create archive
               run: Compress-Archive -Path $env:PublishedExe -DestinationPath $env:PublishedZip
 
-            - name: Get changelog entry
-              id: changelog_reader
-              uses: mindsers/changelog-reader-action@v2
-              with:
-                  validation_level: warn
-                  validation_depth: 1
-                  version: ${{ github.ref_name }}
-                  path: $env:Changelog
+            - name: Extract changelog entry
+              run: tools\ExtractChangelog.ps1 -tag ${{ github.ref_name }} -changelogPath $env:Changelog -extractedChangelogPath $env:ChangelogExtract
 
             - name: Create Release
               uses: softprops/action-gh-release@v2
               with:
                   draft: true
-                  name: ${{ steps.changelog_reader.outputs.version }}
-                  body: ${{ steps.changelog_reader.outputs.changes }}
-                  files: $env:PublishedZip
+                  name: ${{ github.ref_name }}
+                  body_path: ${{ env.ChangelogExtract }}
+                  files: ${{ env.PublishedZip }}
+                  fail_on_unmatched_files: true
