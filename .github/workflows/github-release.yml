@@ -32,13 +32,15 @@ jobs:
               with:
                   dotnet-version: 10.0.x
             - name: Display dotnet version
-              run: dotnet --version
+              run: dotnet --info
 
             - name: Publish project
               run: dotnet publish --configuration $env:Configuration --output $env:PublishOutput $env:Csproj
 
             - name: Create archive
-              run: Compress-Archive -Path $env:PublishedExe -DestinationPath $env:PublishedZip
+              run: |
+                Compress-Archive -Path $env:PublishedExe -DestinationPath $env:PublishedZip
+                dir $env:PublishOutput
 
             - name: Extract changelog entry
               run: tools\ExtractChangelog.ps1 -tag ${{ github.ref_name }} -changelogPath $env:Changelog -extractedChangelogPath $env:ChangelogExtract
