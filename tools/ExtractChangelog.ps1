@@ -35,7 +35,7 @@ $pattern = "(?ms)^# $version \(\d{4}-\d{2}-\d{2}\)(?:\r\n|\n){2}(.*?)^(?=# )"
 if ($content -match $pattern)
 {
     # Extract the matched chapter content
-    $chapterContent = $matches[0]
+    $chapterContent = $matches[1]
 
     # Create the extracted changelog file (and its directory if needed)
     New-Item -ItemType File -Path $extractedChangelogPath -Force
