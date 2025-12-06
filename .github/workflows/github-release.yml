@@ -16,10 +16,10 @@ jobs:
             Csproj: src\BandcampDownloader\BandcampDownloader.csproj
             Configuration: Release
             PublishOutput: artifacts
-            PublishedExe: artifacts\BandcampDownloader.exe
-            PublishedZip: artifacts\BandcampDownloader.zip
+            PublishedExe: artifacts/BandcampDownloader.exe
+            PublishedZip: artifacts/BandcampDownloader.zip
             Changelog: CHANGELOG.md
-            ChangelogExtract: artifacts\CHANGELOG-extract.md
+            ChangelogExtract: artifacts/CHANGELOG-extract.md
 
         steps:
             - name: Checkout
@@ -50,6 +50,6 @@ jobs:
               with:
                   draft: true
                   name: ${{ github.ref_name }}
-                  body_path: ${{ env.ChangelogExtract }}
-                  files: ${{ env.PublishedZip }}
+                  body_path: ${{ env.ChangelogExtract }} # /!\ Path separator must be '/'
+                  files: ${{ env.PublishedZip }} # /!\ Path separator must be '/'
                   fail_on_unmatched_files: true
