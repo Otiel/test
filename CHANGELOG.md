@@ -1,3 +1,9 @@
+# 1.5.3 (2026-04-09)
+
+## Improvements
+
+* Added new file
+
 # 1.5.2 (2025-12-01)
 
 ## Improvements
