@@ -22,4 +22,4 @@ jobs:
               # uses: coditory/changelog-parser@v1
               # uses: kiyoon/parse-changelog-action@v1
               # uses: alleyinteractive/action-changelog-extractor@v0.1.0
-              run: tools\ExtractChangelog.ps1 -tag v1.5.3 -changelogPath CHANGELOG.md -extractedChangelogPath artifacts\CHANGELOG-extract.md
+              run: tools\ExtractChangelog.ps1 -tag v1.5.2 -changelogPath CHANGELOG.md -extractedChangelogPath artifacts\CHANGELOG-extract.md
